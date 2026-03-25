@@ -1,18 +1,8 @@
 package com.omelianenko.consolehangman.model;
 
-public class WordCharChecker {
+public interface WordCharChecker {
 
-    public boolean wordIsEqual (
-        String targetWord,
-        String wordToCheck
-    ){
-        return targetWord.equals(wordToCheck);
-    }
+    boolean wordIsEqual(String targetWord, String wordToCheck);
 
-    public boolean wordContainsChar (
-        String targetWord,
-        char charToCheck
-    ){
-        return targetWord.indexOf(charToCheck) != -1;
-    }
+    boolean wordContainsChar(String targetWord, char charToCheck);
 }

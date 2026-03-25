@@ -1,20 +1,32 @@
 package com.omelianenko.consolehangman.conroller;
 
-import com.omelianenko.consolehangman.util.InputScanner;
 import com.omelianenko.consolehangman.model.WordCharChecker;
 import com.omelianenko.consolehangman.model.WordSelector;
-import com.omelianenko.consolehangman.view.ConsoleHangmanView;
+import com.omelianenko.consolehangman.util.InputScanner;
+import com.omelianenko.consolehangman.view.HangmanView;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class HangmanGameController {
 
+    private final InputScanner inputScanner;
+    private final WordCharChecker wordCharChecker;
+    private final WordSelector wordSelector;
+    private final HangmanView hangmanView;
+
+    public HangmanGameController(
+        InputScanner inputScanner,
+        WordCharChecker wordCharChecker,
+        WordSelector wordSelector,
+        HangmanView hangmanView) {
+        this.inputScanner = inputScanner;
+        this.wordCharChecker = wordCharChecker;
+        this.wordSelector = wordSelector;
+        this.hangmanView = hangmanView;
+    }
+
     public void startGame() {
-        WordSelector wordSelector = new WordSelector();
-        InputScanner inputScanner = new InputScanner();
-        WordCharChecker wordCharChecker = new WordCharChecker();
-        ConsoleHangmanView consoleView = new ConsoleHangmanView();
 
         //Получаем слово
         String targetWord = wordSelector.getRandomWord();
@@ -30,20 +42,19 @@ public class HangmanGameController {
         int attemptsLeft = 6;
 
         //Даём сообщение о старте
-        consoleView.showStartMessage();
-        consoleView.showCurrentHiddenLetters(new String(hiddenChars));
-        consoleView.showHangmanVisualStatus(attemptsLeft);
+        hangmanView.showStartMessage();
+        hangmanView.showCurrentHiddenLetters(new String(hiddenChars));
+        hangmanView.showHangmanVisualStatus(attemptsLeft);
 
-
-        while (gameInProgress && attemptsLeft > 0){
-            consoleView.showAttemptsLeft(attemptsLeft);
-            consoleView.showInputRequestMessage();
+        while (gameInProgress && attemptsLeft > 0) {
+            hangmanView.showAttemptsLeft(attemptsLeft);
+            hangmanView.showInputRequestMessage();
 
             String input = inputScanner.startAndReadInput();
 
             //Проверяем ввод на пустоту
             if (input.isEmpty()) {
-                consoleView.showEmptyInputError();
+                hangmanView.showEmptyInputError();
                 continue;
             }
 
@@ -53,7 +64,7 @@ public class HangmanGameController {
 
                 //Проверка, что буква еще не вводилась
                 if (!checkedChars.add(character)) {
-                    consoleView.showAlreadyGuessedLetterMessage();
+                    hangmanView.showAlreadyGuessedLetterMessage();
                     continue;
                 }
 
@@ -65,39 +76,39 @@ public class HangmanGameController {
                             hiddenChars[i] = character;
                         }
                     }
-                    consoleView.showLetterFoundMessage();
+                    hangmanView.showLetterFoundMessage();
                 } else {
-                    consoleView.showLetterNotFoundMessage();
+                    hangmanView.showLetterNotFoundMessage();
                     attemptsLeft--;
                 }
 
-            //Если введен не 1 символ, значит проверяем слово целиком
+                //Если введен не 1 символ, значит проверяем слово целиком
             } else {
-               if (wordCharChecker.wordIsEqual(targetWord, input)) {
-                   gameInProgress = false;
-                   consoleView.showVictoryMessage(targetWord);
-                   continue;
-               } else {
-                   consoleView.showIncorrectWordMessage();
-                   attemptsLeft--;
+                if (wordCharChecker.wordIsEqual(targetWord, input)) {
+                    gameInProgress = false;
+                    hangmanView.showVictoryMessage(targetWord);
+                    continue;
+                } else {
+                    hangmanView.showIncorrectWordMessage();
+                    attemptsLeft--;
 
-               }
+                }
             }
 
             //Выводим итоге текущего раунда
             String currentHiddenChars = new String(hiddenChars);
-            consoleView.showHangmanVisualStatus(attemptsLeft);
-            consoleView.showCurrentHiddenLetters(currentHiddenChars);
+            hangmanView.showHangmanVisualStatus(attemptsLeft);
+            hangmanView.showCurrentHiddenLetters(currentHiddenChars);
 
             //Проверяем остались ли спрятанные буквы
-            if (!currentHiddenChars.contains("-")){
+            if (!currentHiddenChars.contains("-")) {
                 gameInProgress = false;
-                consoleView.showVictoryMessage(targetWord);
+                hangmanView.showVictoryMessage(targetWord);
             }
         }
 
         if (attemptsLeft == 0) {
-            consoleView.showGameOverMessage(targetWord);
+            hangmanView.showGameOverMessage(targetWord);
         }
 
         inputScanner.closeInput();
