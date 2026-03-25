@@ -48,6 +48,11 @@ public class ConsoleHangmanView {
     }
 
     public void showHangmanVisualStatus(int attemptsLeft){
+        if (attemptsLeft < 0 || attemptsLeft >= hangmanVisualStatus.length) {
+            System.out.println("Не могу отобразить виселицу. Количество попыток не соответствует");
+            return;
+        }
+
         System.out.println(hangmanVisualStatus[attemptsLeft]);
     }
 
