@@ -1,4 +1,4 @@
-package com.omelianenko.consolehangman.conroller;
+package com.omelianenko.consolehangman.controller;
 
 import com.omelianenko.consolehangman.model.WordCharChecker;
 import com.omelianenko.consolehangman.model.WordSelector;
@@ -19,7 +19,8 @@ public class HangmanGameController {
         InputScanner inputScanner,
         WordCharChecker wordCharChecker,
         WordSelector wordSelector,
-        HangmanView hangmanView) {
+        HangmanView hangmanView
+    ) {
         this.inputScanner = inputScanner;
         this.wordCharChecker = wordCharChecker;
         this.wordSelector = wordSelector;
