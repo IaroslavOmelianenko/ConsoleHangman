@@ -1,14 +1,12 @@
 package com.omelianenko.consolehangman.controller;
 
-import static org.mockito.ArgumentMatchers.anyChar;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.omelianenko.consolehangman.model.WordCharChecker;
 import com.omelianenko.consolehangman.model.WordSelector;
 import com.omelianenko.consolehangman.util.InputScanner;
 import com.omelianenko.consolehangman.view.HangmanView;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,9 +24,6 @@ class HangmanGameControllerTest {
     private InputScanner inputScanner;
 
     @Mock
-    private WordCharChecker wordCharChecker;
-
-    @Mock
     private HangmanView hangmanView;
 
     @Mock
@@ -41,15 +36,10 @@ class HangmanGameControllerTest {
         when(wordSelector.getRandomWord()).thenReturn("apple");
 
         when(inputScanner.startAndReadInput())
-            .thenReturn("a")
-            .thenReturn("p")
-            .thenReturn("l")
-            .thenReturn("e");
-
-        when(wordCharChecker.wordContainsChar("apple", 'a')).thenReturn(true);
-        when(wordCharChecker.wordContainsChar("apple", 'p')).thenReturn(true);
-        when(wordCharChecker.wordContainsChar("apple", 'l')).thenReturn(true);
-        when(wordCharChecker.wordContainsChar("apple", 'e')).thenReturn(true);
+            .thenReturn(Optional.of("a"))
+            .thenReturn(Optional.of("p"))
+            .thenReturn(Optional.of("l"))
+            .thenReturn(Optional.of("e"));
 
         controller.startGame();
 
@@ -64,9 +54,7 @@ class HangmanGameControllerTest {
         when(wordSelector.getRandomWord()).thenReturn("apple");
 
         when(inputScanner.startAndReadInput())
-            .thenReturn("apple");
-
-        when(wordCharChecker.wordIsEqual("apple", "apple")).thenReturn(true);
+            .thenReturn(Optional.of("apple"));
 
         controller.startGame();
 
@@ -81,14 +69,12 @@ class HangmanGameControllerTest {
         when(wordSelector.getRandomWord()).thenReturn("apple");
 
         when(inputScanner.startAndReadInput())
-            .thenReturn("b")
-            .thenReturn("c")
-            .thenReturn("d")
-            .thenReturn("f")
-            .thenReturn("g")
-            .thenReturn("h");
-
-        when(wordCharChecker.wordContainsChar(anyString(), anyChar())).thenReturn(false);
+            .thenReturn(Optional.of("b"))
+            .thenReturn(Optional.of("c"))
+            .thenReturn(Optional.of("d"))
+            .thenReturn(Optional.of("f"))
+            .thenReturn(Optional.of("g"))
+            .thenReturn(Optional.of("h"));
 
         controller.startGame();
 
@@ -102,10 +88,8 @@ class HangmanGameControllerTest {
         when(wordSelector.getRandomWord()).thenReturn("apple");
 
         when(inputScanner.startAndReadInput())
-            .thenReturn("")         // пустой ввод
-            .thenReturn("apple"); // завершаем игру победой
-
-        when(wordCharChecker.wordIsEqual("apple", "apple")).thenReturn(true);
+            .thenReturn(Optional.empty())         // пустой ввод
+            .thenReturn(Optional.of("apple")); // завершаем игру победой
 
         controller.startGame();
 
@@ -120,11 +104,9 @@ class HangmanGameControllerTest {
         when(wordSelector.getRandomWord()).thenReturn("apple");
 
         when(inputScanner.startAndReadInput())
-            .thenReturn("a")
-            .thenReturn("a")
-            .thenReturn("apple"); // завершаем игру победой
-
-        when(wordCharChecker.wordIsEqual("apple", "apple")).thenReturn(true);
+            .thenReturn(Optional.of("a"))
+            .thenReturn(Optional.of("a"))
+            .thenReturn(Optional.of("apple")); // завершаем игру победой
 
         controller.startGame();
 

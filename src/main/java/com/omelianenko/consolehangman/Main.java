@@ -1,9 +1,7 @@
 package com.omelianenko.consolehangman;
 
 import com.omelianenko.consolehangman.controller.HangmanGameController;
-import com.omelianenko.consolehangman.model.DefaultWordCharChecker;
 import com.omelianenko.consolehangman.model.FromFileWordSelector;
-import com.omelianenko.consolehangman.model.WordCharChecker;
 import com.omelianenko.consolehangman.model.WordSelector;
 import com.omelianenko.consolehangman.util.ConsoleInputScanner;
 import com.omelianenko.consolehangman.util.InputScanner;
@@ -14,14 +12,13 @@ public class Main {
 
     public static void main(String[] args) {
         InputScanner inputScanner = new ConsoleInputScanner();
-        WordCharChecker wordCharChecker = new DefaultWordCharChecker();
+        //WordCharChecker wordCharChecker = new DefaultWordCharChecker();
         WordSelector wordSelector = new FromFileWordSelector("src/main/resources/words.txt");
         HangmanView hangmanView = new ConsoleHangmanView();
 
-
         HangmanGameController hangmanGameController = new HangmanGameController(
             inputScanner,
-            wordCharChecker,
+            //wordCharChecker,
             wordSelector,
             hangmanView);
         hangmanGameController.startGame();

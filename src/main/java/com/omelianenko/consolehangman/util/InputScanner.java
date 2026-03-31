@@ -1,8 +1,10 @@
 package com.omelianenko.consolehangman.util;
 
+import java.util.Optional;
+
 public interface InputScanner {
 
-    String startAndReadInput();
+    Optional<String> startAndReadInput();
 
     void closeInput();
 

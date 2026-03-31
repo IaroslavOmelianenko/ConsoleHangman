@@ -1,6 +1,7 @@
 package com.omelianenko.consolehangman.util;
 
 
+import java.util.Optional;
 import java.util.Scanner;
 
 public class ConsoleInputScanner implements InputScanner {
@@ -12,11 +13,12 @@ public class ConsoleInputScanner implements InputScanner {
     }
 
     @Override
-    public String startAndReadInput() {
+    public Optional<String> startAndReadInput() {
         if (scanner.hasNextLine()) {
-            return scanner.nextLine().trim().toLowerCase();
+            String input = scanner.nextLine().trim();
+            return Optional.ofNullable(input.isEmpty() ? null : input.toLowerCase());
         }
-        return "";
+        return Optional.empty();
     }
 
     @Override

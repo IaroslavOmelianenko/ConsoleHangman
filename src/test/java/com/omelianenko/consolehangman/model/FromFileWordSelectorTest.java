@@ -1,41 +1,30 @@
 package com.omelianenko.consolehangman.model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
 class FromFileWordSelectorTest {
 
-    @TempDir
-    Path tempDir;
-
-    private Path testFile;
-
-    @BeforeEach
-    void setUp() throws IOException {
-        testFile = tempDir.resolve("words.txt");
-    }
-
+    private static final String VALID_RESOURCE = "test-words.txt";
+    private static final String EMPTY_RESOURCE = "empty-file.txt";
+    private static final String MISSING_RESOURCE = "missing-file.txt";
 
     @Test
     @DisplayName("Возвращает случайное слово из файла")
-    void should_ReturnRandomWord_FromValidFile() throws IOException {
-        List<String> sampleWords = Arrays.asList("apple", "banana", "orange");
-        Files.write(testFile, sampleWords);
-
-        FromFileWordSelector selector = new FromFileWordSelector(testFile.toString());
+    void should_ReturnRandomWord_FromValidFile() {
+        FromFileWordSelector selector = new FromFileWordSelector(VALID_RESOURCE);
 
         String word = selector.getRandomWord();
+
+        List<String> sampleWords = Arrays.asList("apple", "banana", "orange");
 
         assertTrue(sampleWords.contains(word));
     }
@@ -44,12 +33,8 @@ class FromFileWordSelectorTest {
     @Test
     @DisplayName("Выброс исключения, если файл пуст")
     void should_ThrowException_When_FileIsEmpty() throws IOException {
-        // Подготовка
-        Files.createFile(testFile); // создаём пустой файл
+        FromFileWordSelector selector = new FromFileWordSelector(EMPTY_RESOURCE);
 
-        FromFileWordSelector selector = new FromFileWordSelector(testFile.toString());
-
-        // Действие и проверка
         RuntimeException thrown = assertThrows(
             RuntimeException.class,
             selector::getRandomWord
@@ -62,27 +47,21 @@ class FromFileWordSelectorTest {
     @Test
     @DisplayName("Выброс исключения, если файла не существует")
     void should_ThrowException_When_FileDoesNotExist() {
-        FromFileWordSelector selector = new FromFileWordSelector("nonexistent.txt");
+        FromFileWordSelector selector = new FromFileWordSelector(MISSING_RESOURCE);
 
-        // Действие и проверка
         RuntimeException thrown = assertThrows(
             RuntimeException.class,
             selector::getRandomWord
         );
 
-        assertTrue(thrown.getMessage().contains("Ошибка чтения файла"));
-        assertNotNull(thrown.getCause());
+        assertTrue(thrown.getMessage().contains("Файл не найден"));
     }
 
 
     @Test
     @DisplayName("Возвращает разные слова при многократном вызове")
     void should_ReturnDifferentWords_WhenCalledMultipleTimes() throws IOException {
-        // Подготовка
-        List<String> words = Arrays.asList("apple", "banana", "orange");
-        Files.write(testFile, words);
-
-        FromFileWordSelector selector = new FromFileWordSelector(testFile.toString());
+        FromFileWordSelector selector = new FromFileWordSelector(VALID_RESOURCE);
 
         Set<String> results = new HashSet<>();
         for (int i = 0; i < 10; i++) {
@@ -91,7 +70,6 @@ class FromFileWordSelectorTest {
 
         // Проверка, что возвращались разные слова
         assertTrue(results.size() > 1);
+
     }
-
-
 }

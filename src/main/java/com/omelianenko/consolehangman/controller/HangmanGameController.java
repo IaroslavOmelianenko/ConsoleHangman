@@ -1,31 +1,20 @@
 package com.omelianenko.consolehangman.controller;
 
-import com.omelianenko.consolehangman.model.WordCharChecker;
 import com.omelianenko.consolehangman.model.WordSelector;
 import com.omelianenko.consolehangman.util.InputScanner;
 import com.omelianenko.consolehangman.view.HangmanView;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class HangmanGameController {
 
     private final InputScanner inputScanner;
-    private final WordCharChecker wordCharChecker;
     private final WordSelector wordSelector;
     private final HangmanView hangmanView;
-
-    public HangmanGameController(
-        InputScanner inputScanner,
-        WordCharChecker wordCharChecker,
-        WordSelector wordSelector,
-        HangmanView hangmanView
-    ) {
-        this.inputScanner = inputScanner;
-        this.wordCharChecker = wordCharChecker;
-        this.wordSelector = wordSelector;
-        this.hangmanView = hangmanView;
-    }
 
     public void startGame() {
 
@@ -51,13 +40,15 @@ public class HangmanGameController {
             hangmanView.showAttemptsLeft(attemptsLeft);
             hangmanView.showInputRequestMessage();
 
-            String input = inputScanner.startAndReadInput();
+            Optional<String> optionalInput = inputScanner.startAndReadInput();
 
             //Проверяем ввод на пустоту
-            if (input.isEmpty()) {
+            if (optionalInput.isEmpty()) {
                 hangmanView.showEmptyInputError();
                 continue;
             }
+
+            String input = optionalInput.get();
 
             //Проверка одноной буквы
             if (input.length() == 1) {
@@ -70,7 +61,7 @@ public class HangmanGameController {
                 }
 
                 //Проверяем, что буква есть в слове
-                if (wordCharChecker.wordContainsChar(targetWord, character)) {
+                if (targetWord.contains(Character.toString(character))) {
                     //Открываем букву в спрятанном слове
                     for (int i = 0; i < targetWord.length(); i++) {
                         if (targetWord.charAt(i) == character) {
@@ -85,7 +76,7 @@ public class HangmanGameController {
 
                 //Если введен не 1 символ, значит проверяем слово целиком
             } else {
-                if (wordCharChecker.wordIsEqual(targetWord, input)) {
+                if (targetWord.equals(input)) {
                     gameInProgress = false;
                     hangmanView.showVictoryMessage(targetWord);
                     continue;
