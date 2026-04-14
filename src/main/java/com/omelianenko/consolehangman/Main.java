@@ -18,7 +18,6 @@ public class Main {
 
         HangmanGameController hangmanGameController = new HangmanGameController(
             inputScanner,
-            //wordCharChecker,
             wordSelector,
             hangmanView);
         hangmanGameController.startGame();
