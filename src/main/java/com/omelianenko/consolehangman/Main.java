@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) {
         InputScanner inputScanner = new ConsoleInputScanner();
         //WordCharChecker wordCharChecker = new DefaultWordCharChecker();
-        WordSelector wordSelector = new FromFileWordSelector("src/main/resources/words.txt");
+        WordSelector wordSelector = new FromFileWordSelector("words.txt");
         HangmanView hangmanView = new ConsoleHangmanView();
 
         HangmanGameController hangmanGameController = new HangmanGameController(
