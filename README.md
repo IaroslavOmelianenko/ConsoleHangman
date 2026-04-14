@@ -2,6 +2,7 @@
 - Using console
 - Getting random word from file in resources
 - Game status visualization
+- Unit tests
 
 ```
 Игра началась! Угадайте загаданное слово
